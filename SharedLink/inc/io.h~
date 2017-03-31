@@ -1,0 +1,5 @@
+/* io.h */
+#include <stdio.h>
+#DEBUG 0 
+void mywrite(void);
+void myread(void);

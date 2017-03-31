@@ -1,0 +1,34 @@
+#Dynamic Makefile
+
+CC = gcc
+AR=ar
+OPTION= -fPIC -Wall
+CFLAGS = -c -g
+INCLUDE=-I../inc
+LINKEROPTION = -Wl
+LIBS=-L./ -lmyio
+DYNAMICLIBTARGET = libmyio.so.0.0
+SRCS = read.c write.c
+OBJS=$(SRCS:.c=.o)
+
+.SUFFIXES:.c.o
+.c.o:
+	$(CC) $(OPTION) $(CFLAGS) $(INCLUDE) $<
+
+
+all: DynamicTest
+
+$(DYNAMICLIBTARGET): $(OBJS)
+	$(CC) -g -shared $(LINKEROPTION),-soname,$(DYNAMICLIBTARGET) -o $(DYNAMICLIBTARGET) $(OBJS) -lc
+
+#libmyio.so:
+#	ln -sf $(DYNAMICLIBTARGET) libmyio.so
+
+dep:
+	gccmakedep $(INCLUDE) $(SRCS)
+
+DynamicTest:  $(DYNAMICLIBTARGET)
+	$(CC) -o $@ main.o $(LIBS)
+	@echo done
+clean: 
+	rm -rf test *.o $(DYNAMICLIBTARGET) core
